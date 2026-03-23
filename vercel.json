@@ -1,10 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "api/proxy.js", "use": "@vercel/node" }
-  ],
   "rewrites": [
-    { "source": "/api/proxy", "destination": "/api/proxy" }
+    { "source": "/omi-api/:path*", "destination": "https://api.omi.me/:path*" }
   ]
 }

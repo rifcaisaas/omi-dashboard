@@ -925,7 +925,7 @@ const STATE = {
 const CACHE_TTL = 300000; // 5 min
 const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_BASE_DIRECT = '/api/v1/dev/user';  // local proxy.js
-const API_BASE_VERCEL = '/api/proxy?path=/v1/dev/user';  // Vercel serverless
+const API_BASE_VERCEL = '/omi-api/v1/dev/user';  // Vercel rewrite proxy
 
 // ==================== UTILS ====================
 function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -1007,7 +1007,7 @@ async function apiRequest(endpoint, method, body) {
     if (body && method !== 'GET') opts.body = JSON.stringify(body);
     var url = IS_LOCAL
         ? '/api/v1/dev/user' + endpoint
-        : '/api/proxy?path=' + encodeURIComponent('/v1/dev/user' + endpoint);
+        : '/omi-api/v1/dev/user' + endpoint;
     var resp = await fetch(url, opts);
     if (!resp.ok) {
         var err = await resp.text();
@@ -1110,7 +1110,7 @@ async function login() {
     try {
         var testUrl = IS_LOCAL
             ? '/api/v1/dev/user/conversations?limit=1'
-            : '/api/proxy?path=' + encodeURIComponent('/v1/dev/user/conversations?limit=1');
+            : '/omi-api/v1/dev/user/conversations?limit=1';
         var resp = await fetch(testUrl, { headers: { 'Authorization': 'Bearer ' + key } });
         if (!resp.ok) throw new Error('Invalid key');
         STATE.apiKey = key;
