@@ -1745,20 +1745,18 @@ function closeModal() {
 }
 
 // ==================== INIT ====================
+var HARDCODED_KEY = 'omi_dev_57d17caf0519311a2f8b407b27ae18f4';
+
 document.addEventListener('DOMContentLoaded', function() {
-    var savedKey = localStorage.getItem('omi_api_key');
-    if (savedKey) {
-        STATE.apiKey = savedKey;
-        loadCache();
-        showScreen('screenApp');
-        buildMenu();
-        if (!isCacheValid('conversations')) {
-            refreshAllData();
-        } else {
-            render();
-        }
+    STATE.apiKey = HARDCODED_KEY;
+    localStorage.setItem('omi_api_key', HARDCODED_KEY);
+    loadCache();
+    showScreen('screenApp');
+    buildMenu();
+    if (!isCacheValid('conversations')) {
+        refreshAllData();
     } else {
-        showScreen('screenAuth');
+        render();
     }
 });
 
