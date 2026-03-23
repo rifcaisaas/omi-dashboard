@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMI Dashboard — CONTINUUM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   OMI DASHBOARD — CONTINUUM DESIGN SYSTEM
+   Single-file HTML Application
+   ============================================ */
+
+/* === RESET & BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --omi-accent: #F59E0B;
+    --omi-accent-hover: #D97706;
+    --omi-accent-rgb: 245, 158, 11;
+    --omi-accent-glow: rgba(245, 158, 11, 0.15);
+    --bg: #0f1117;
+    --bg-card: #161B22;
+    --bg-card-hover: #1C2128;
+    --bg-input: #0D1117;
+    --text: #E6EDF3;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --border: #21262D;
+    --border-light: #30363D;
+    --border-medium: #3D444D;
+    --danger: #D97B7B;
+    --danger-hover: #C56B6B;
+    --success: #4A7C59;
+    --success-light: #5B9A6B;
+    --warning: #E5B45A;
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 56px;
+    --header-height: 56px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --transition: 0.2s ease;
+}
+
+html { font-size: 13px; line-height: 1.5; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+}
+
+a { color: var(--omi-accent); text-decoration: none; }
+a:hover { color: var(--omi-accent-hover); }
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-medium); }
+
+/* === SCREENS === */
+.screen { display: none; height: 100vh; }
+.screen.active { display: flex; }
+
+/* === AUTH SCREEN === */
+#screenAuth {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, rgba(245,158,11,0.06) 0%, transparent 60%), var(--bg);
+}
+.auth-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    width: 420px;
+    max-width: 90vw;
+    text-align: center;
+}
+.auth-logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    color: var(--omi-accent);
+}
+.auth-box h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+.auth-box p {
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+.auth-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition);
+    margin-bottom: 16px;
+}
+.auth-input:focus { border-color: var(--omi-accent); }
+.auth-input::placeholder { color: var(--text-muted); }
+
+/* === BUTTONS === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    line-height: 1;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn-primary {
+    background: var(--omi-accent);
+    color: #000;
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+}
+.btn-primary:hover { background: var(--omi-accent-hover); }
+.btn-secondary {
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: var(--border-light); }
+.btn-danger { background: rgba(217,123,123,0.15); color: var(--danger); border: 1px solid rgba(217,123,123,0.3); }
+.btn-danger:hover { background: rgba(217,123,123,0.25); }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+.btn-icon {
+    padding: 6px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+}
+.btn-icon:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.btn-icon svg { width: 16px; height: 16px; }
+
+/* === SIDEBAR === */
+.sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    background: linear-gradient(180deg, #1a1508 0%, #141008 50%, #0f1117 100%);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1), min-width 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+    z-index: 100;
+}
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+    min-width: var(--sidebar-collapsed);
+}
+.sb-brand {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    min-height: 60px;
+    cursor: pointer;
+}
+.sb-brand svg { width: 28px; height: 28px; color: var(--omi-accent); flex-shrink: 0; }
+.sb-brand-text { white-space: nowrap; overflow: hidden; }
+.sb-brand-name { font-size: 1.1rem; font-weight: 700; color: var(--text); letter-spacing: 0.5px; }
+.sb-brand-sub { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.sidebar.collapsed .sb-brand-text { opacity: 0; width: 0; }
+.sidebar.collapsed .sb-brand { justify-content: center; padding: 16px 0; }
+
+.sb-nav { flex: 1; padding: 12px 8px; overflow-y: auto; overflow-x: hidden; }
+.sb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition);
+    color: var(--text-secondary);
+    position: relative;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+.sb-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.sb-item.active {
+    background: var(--omi-accent-glow);
+    color: var(--omi-accent);
+    font-weight: 500;
+}
+.sb-item.active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: var(--omi-accent);
+    border-radius: 3px 0 0 3px;
+}
+.sb-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sb-item-label { font-size: 0.9rem; overflow: hidden; transition: opacity 0.2s; }
+.sidebar.collapsed .sb-item-label { opacity: 0; width: 0; }
+.sidebar.collapsed .sb-item { justify-content: center; padding: 10px 0; }
+.sb-item .sb-badge {
+    margin-left: auto;
+    background: rgba(245,158,11,0.2);
+    color: var(--omi-accent);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+.sidebar.collapsed .sb-badge { display: none; }
+
+.sb-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 12px; }
+
+.sb-footer {
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+.sb-footer .sb-item { color: var(--text-muted); }
+.sb-footer .sb-item:hover { color: var(--danger); }
+
+/* === MAIN AREA === */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+.header {
+    height: var(--header-height);
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(15,17,23,0.8);
+    backdrop-filter: blur(8px);
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header-left h2 { font-size: 1.1rem; font-weight: 600; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.header-sync { font-size: 0.75rem; color: var(--text-muted); }
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* === STAT CARDS === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: border-color var(--transition);
+}
+.stat-card:hover { border-color: var(--border-light); }
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.stat-icon svg { width: 20px; height: 20px; }
+.stat-icon.orange { background: rgba(245,158,11,0.15); color: var(--omi-accent); }
+.stat-icon.blue { background: rgba(59,130,246,0.15); color: #3B82F6; }
+.stat-icon.green { background: rgba(74,124,89,0.15); color: var(--success-light); }
+.stat-icon.purple { background: rgba(139,92,246,0.15); color: #8B5CF6; }
+.stat-info { flex: 1; }
+.stat-value { font-size: 1.8rem; font-weight: 700; line-height: 1.2; }
+.stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+
+/* === SECTION HEADERS === */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.section-header h3 { font-size: 1rem; font-weight: 600; }
+.section-header a { font-size: 0.8rem; }
+
+/* === DATA CARDS === */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    transition: all var(--transition);
+    cursor: pointer;
+}
+.card:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+.card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+.card-overview { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+}
+.card-meta-item { display: flex; align-items: center; gap: 4px; }
+.card-meta-item svg { width: 12px; height: 12px; }
+
+/* === CATEGORY BADGES === */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge-business { background: rgba(59,130,246,0.15); color: #60A5FA; }
+.badge-education { background: rgba(16,185,129,0.15); color: #34D399; }
+.badge-work { background: rgba(245,158,11,0.15); color: #FBBF24; }
+.badge-social { background: rgba(139,92,246,0.15); color: #A78BFA; }
+.badge-technology { background: rgba(6,182,212,0.15); color: #22D3EE; }
+.badge-politics { background: rgba(244,63,94,0.15); color: #FB7185; }
+.badge-personal { background: rgba(236,72,153,0.15); color: #F472B6; }
+.badge-health { background: rgba(52,211,153,0.15); color: #6EE7B7; }
+.badge-family { background: rgba(251,146,60,0.15); color: #FB923C; }
+.badge-finance { background: rgba(250,204,21,0.15); color: #FACC15; }
+.badge-other { background: rgba(156,163,175,0.15); color: #9CA3AF; }
+.badge-entertainment { background: rgba(168,85,247,0.15); color: #C084FC; }
+.badge-history { background: rgba(180,83,9,0.15); color: #D97706; }
+.badge-spiritual { background: rgba(192,132,252,0.15); color: #DDD6FE; }
+.badge-psychology { background: rgba(34,211,238,0.15); color: #67E8F9; }
+.badge-romantic { background: rgba(251,113,133,0.15); color: #FDA4AF; }
+.badge-design { background: rgba(244,114,182,0.15); color: #F9A8D4; }
+.badge-news { background: rgba(148,163,184,0.15); color: #CBD5E1; }
+.badge-real { background: rgba(163,230,53,0.15); color: #BEF264; }
+.badge-entrepreneurship { background: rgba(245,158,11,0.15); color: #FCD34D; }
+.badge-system { background: rgba(59,130,246,0.15); color: #60A5FA; }
+.badge-interesting { background: rgba(245,158,11,0.15); color: #FBBF24; }
+
+/* === SEARCH & FILTERS === */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    margin-bottom: 16px;
+    transition: border-color var(--transition);
+}
+.search-bar:focus-within { border-color: var(--omi-accent); }
+.search-bar svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+.search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    outline: none;
+}
+.search-bar input::placeholder { color: var(--text-muted); }
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: 'Inter', sans-serif;
+}
+.filter-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+.filter-btn.active { background: var(--omi-accent-glow); color: var(--omi-accent); border-color: rgba(245,158,11,0.3); }
+
+.filter-select {
+    padding: 6px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+}
+.filter-select:focus { border-color: var(--omi-accent); }
+
+/* === LIST LAYOUT === */
+.list-grid { display: flex; flex-direction: column; gap: 8px; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+
+/* === DETAIL VIEW === */
+.detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-bottom: 16px;
+    padding: 4px 0;
+}
+.detail-back:hover { color: var(--omi-accent); }
+.detail-back svg { width: 16px; height: 16px; }
+.detail-header { margin-bottom: 24px; }
+.detail-header h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.detail-header .card-meta { margin-top: 8px; }
+.detail-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.detail-section h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.detail-section h4 svg { width: 16px; height: 16px; }
+.detail-overview { font-size: 0.95rem; line-height: 1.7; color: var(--text); }
+.detail-transcript { font-size: 0.9rem; line-height: 1.7; color: var(--text-secondary); }
+.transcript-segment { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.transcript-segment:last-child { border-bottom: none; }
+.transcript-speaker { font-weight: 600; color: var(--omi-accent); font-size: 0.8rem; }
+.transcript-time { font-size: 0.7rem; color: var(--text-muted); margin-left: 8px; }
+
+/* === BAR CHART (CSS-only) === */
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 100px; font-size: 0.8rem; color: var(--text-secondary); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 24px; background: rgba(255,255,255,0.04); border-radius: var(--radius-sm); overflow: hidden; }
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--omi-accent), var(--omi-accent-hover));
+    border-radius: var(--radius-sm);
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #000;
+    min-width: fit-content;
+}
+.bar-value { font-size: 0.8rem; color: var(--text-muted); width: 40px; text-align: right; }
+
+/* === ACTION ITEMS === */
+.action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition);
+}
+.action-item:hover { border-color: var(--border-light); }
+.action-check {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-light);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    background: transparent;
+}
+.action-check:hover { border-color: var(--omi-accent); }
+.action-check.checked {
+    background: var(--success);
+    border-color: var(--success);
+}
+.action-check.checked svg { color: #fff; width: 14px; height: 14px; }
+.action-body { flex: 1; }
+.action-desc { font-size: 0.9rem; }
+.action-desc.completed { text-decoration: line-through; color: var(--text-muted); }
+.action-meta { display: flex; align-items: center; gap: 12px; margin-top: 6px; font-size: 0.75rem; color: var(--text-muted); }
+.action-due { display: flex; align-items: center; gap: 4px; }
+.action-due svg { width: 12px; height: 12px; }
+.action-due.overdue { color: var(--danger); }
+.action-due.today { color: var(--warning); }
+.action-due.future { color: var(--success-light); }
+.action-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* === MEMORY CARDS === */
+.memory-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    transition: all var(--transition);
+}
+.memory-card:hover { border-color: var(--border-light); }
+.memory-content {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 120px;
+    overflow: hidden;
+    position: relative;
+}
+.memory-content.expanded { max-height: none; }
+.memory-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+.memory-footer-left { display: flex; align-items: center; gap: 8px; }
+.memory-footer-right { display: flex; gap: 4px; }
+
+/* === MODAL === */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    width: 500px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.modal-header h3 { font-size: 1.05rem; font-weight: 600; }
+.modal-body { padding: 24px; }
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color var(--transition);
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--omi-accent); }
+.form-textarea { min-height: 120px; resize: vertical; }
+
+/* === TOAST === */
+.toast-container {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.toast {
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastIn 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+.toast-success { background: #1a3a2a; border: 1px solid var(--success); color: var(--success-light); }
+.toast-error { background: #3a1a1a; border: 1px solid var(--danger); color: var(--danger); }
+.toast-info { background: #1a2a3a; border: 1px solid #3B82F6; color: #60A5FA; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+/* === LOADING === */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.loading-spinner {
+    display: inline-flex;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* === EMPTY STATE === */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+}
+.empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state h4 { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
+.empty-state p { font-size: 0.85rem; }
+
+/* === HEATMAP (hours) === */
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    gap: 3px;
+}
+.heatmap-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    position: relative;
+    min-height: 24px;
+}
+.heatmap-cell::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+}
+.heat-0 { background: rgba(255,255,255,0.03); }
+.heat-1 { background: rgba(245,158,11,0.2); }
+.heat-2 { background: rgba(245,158,11,0.4); }
+.heat-3 { background: rgba(245,158,11,0.6); }
+.heat-4 { background: rgba(245,158,11,0.8); }
+.heat-5 { background: rgba(245,158,11,1); }
+
+/* === WEEKDAY CHART === */
+.weekday-chart { display: flex; align-items: flex-end; gap: 8px; height: 120px; padding: 0 8px; }
+.weekday-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+.weekday-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--omi-accent), var(--omi-accent-hover));
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+    min-height: 2px;
+}
+.weekday-label { font-size: 0.7rem; color: var(--text-muted); }
+.weekday-value { font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; }
+
+/* === RESULTS COUNT === */
+.results-count { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+
+/* === SETTINGS === */
+.settings-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.settings-section h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.settings-section h4 svg { width: 16px; height: 16px; color: var(--omi-accent); }
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label { font-size: 0.85rem; color: var(--text-secondary); }
+.settings-row-value { font-size: 0.85rem; color: var(--text); font-family: monospace; }
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .sidebar.collapsed { transform: translateX(-100%); }
+    .content { padding: 16px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid { grid-template-columns: 1fr; }
+    .bar-label { width: 70px; }
+    .heatmap-grid { grid-template-columns: repeat(12, 1fr); }
+    .auth-box { padding: 24px; }
+}
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .filter-row { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== SCREEN: AUTH ========== -->
+<div id="screenAuth" class="screen active">
+    <div class="auth-box">
+        <div class="auth-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h1>OMI Dashboard</h1>
+        <p>Conecteaza-te cu cheia API Developer din aplicatia OMI</p>
+        <input type="text" class="auth-input" id="authKeyInput" placeholder="omi_dev_xxxxxxxxxxxxxxxx" autocomplete="off">
+        <div id="authError" style="color:var(--danger);font-size:0.8rem;margin-bottom:12px;display:none;"></div>
+        <button class="btn btn-primary" onclick="login()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Conectare
+        </button>
+    </div>
+</div>
+
+<!-- ========== SCREEN: APP ========== -->
+<div id="screenApp" class="screen">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebarEl">
+        <div class="sb-brand" onclick="toggleSidebar()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="sb-brand-text">
+                <div class="sb-brand-name">OMI</div>
+                <div class="sb-brand-sub">Dashboard</div>
+            </div>
+        </div>
+        <nav class="sb-nav" id="navMenu"></nav>
+        <div class="sb-footer">
+            <div class="sb-item" onclick="logout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span class="sb-item-label">Deconectare</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <header class="header">
+            <div class="header-left">
+                <button class="btn-icon" onclick="toggleSidebar()" style="display:none" id="menuToggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <h2 id="pageTitle">Dashboard</h2>
+            </div>
+            <div class="header-right">
+                <span class="header-sync" id="syncTime"></span>
+                <button class="btn-icon" onclick="refreshAllData()" title="Reincarca date">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                </button>
+            </div>
+        </header>
+        <div class="content" id="contentArea"></div>
+    </main>
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box" id="modalBox"></div>
+</div>
+
+<!-- ========== TOAST ========== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ============================================
+   OMI DASHBOARD — JAVASCRIPT
+   ============================================ */
+
+// ==================== ICONS ====================
+const IC = {
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    messageSquare: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    brain: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"/></svg>',
+    checkSquare: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    barChart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    mapPin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    chevronRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+    alertCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    checkCircle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
+    target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
+    database: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    externalLink: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+    tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+};
+
+// ==================== STATE ====================
+const STATE = {
+    apiKey: null,
+    currentPage: 'dashboard',
+    conversations: [],
+    memories: [],
+    actionItems: [],
+    goals: [],
+    cacheTs: { conversations: 0, memories: 0, actionItems: 0, goals: 0 },
+    convSearch: '',
+    convCategory: 'all',
+    memSearch: '',
+    memCategory: 'all',
+    actionFilter: 'all',
+    selectedConversation: null,
+    sidebarCollapsed: false,
+    loading: {},
+    lastSync: null,
+};
+
+const CACHE_TTL = 300000; // 5 min
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_DIRECT = '/api/v1/dev/user';  // local proxy.js
+const API_BASE_VERCEL = '/api/proxy?path=/v1/dev/user';  // Vercel serverless
+
+// ==================== UTILS ====================
+function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function truncate(s, n) { if (!s) return ''; return s.length > n ? s.substring(0, n) + '...' : s; }
+
+function formatDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' +
+           d.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' });
+}
+function formatDateShort(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' });
+}
+function formatRelative(iso) {
+    if (!iso) return '';
+    var now = Date.now(), t = new Date(iso).getTime(), diff = now - t;
+    if (diff < 60000) return 'acum';
+    if (diff < 3600000) return Math.floor(diff / 60000) + ' min';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + ' ore';
+    if (diff < 172800000) return 'ieri';
+    return Math.floor(diff / 86400000) + ' zile';
+}
+function formatDuration(start, end) {
+    if (!start || !end) return '';
+    var ms = new Date(end).getTime() - new Date(start).getTime();
+    var min = Math.floor(ms / 60000);
+    if (min < 60) return min + ' min';
+    return Math.floor(min / 60) + 'h ' + (min % 60) + 'min';
+}
+
+function debounce(fn, delay) {
+    var timer;
+    return function() {
+        var args = arguments, ctx = this;
+        clearTimeout(timer);
+        timer = setTimeout(function() { fn.apply(ctx, args); }, delay);
+    };
+}
+
+function getCatColor(cat) {
+    var colors = {
+        business: '#60A5FA', education: '#34D399', work: '#FBBF24', social: '#A78BFA',
+        technology: '#22D3EE', politics: '#FB7185', personal: '#F472B6', health: '#6EE7B7',
+        family: '#FB923C', finance: '#FACC15', other: '#9CA3AF', entertainment: '#C084FC',
+        history: '#D97706', spiritual: '#DDD6FE', psychology: '#67E8F9', romantic: '#FDA4AF',
+        design: '#F9A8D4', news: '#CBD5E1', real: '#BEF264', entrepreneurship: '#FCD34D',
+        system: '#60A5FA', interesting: '#FBBF24'
+    };
+    return colors[cat] || '#9CA3AF';
+}
+
+// ==================== TOAST ====================
+function showToast(msg, type) {
+    type = type || 'info';
+    var icons = { success: IC.checkCircle, error: IC.alertCircle, info: IC.info };
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    el.innerHTML = (icons[type] || '') + ' ' + esc(msg);
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(function() { el.style.opacity = '0'; el.style.transform = 'translateX(40px)'; setTimeout(function() { el.remove(); }, 300); }, 3000);
+}
+
+// ==================== SCREEN ====================
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+}
+
+// ==================== API LAYER ====================
+async function apiRequest(endpoint, method, body) {
+    method = method || 'GET';
+    var opts = {
+        method: method,
+        headers: { 'Authorization': 'Bearer ' + STATE.apiKey, 'Content-Type': 'application/json' }
+    };
+    if (body && method !== 'GET') opts.body = JSON.stringify(body);
+    var url = IS_LOCAL
+        ? '/api/v1/dev/user' + endpoint
+        : '/api/proxy?path=' + encodeURIComponent('/v1/dev/user' + endpoint);
+    var resp = await fetch(url, opts);
+    if (!resp.ok) {
+        var err = await resp.text();
+        throw new Error('API ' + resp.status + ': ' + err);
+    }
+    if (resp.status === 204) return null;
+    return resp.json();
+}
+
+async function fetchConversations() {
+    STATE.loading.conversations = true;
+    render();
+    try {
+        STATE.conversations = await apiRequest('/conversations?limit=500');
+        STATE.cacheTs.conversations = Date.now();
+        saveCache();
+    } catch (e) { showToast('Eroare la incarcarea conversatiilor: ' + e.message, 'error'); }
+    STATE.loading.conversations = false;
+}
+
+async function fetchMemories() {
+    STATE.loading.memories = true;
+    try {
+        STATE.memories = await apiRequest('/memories?limit=500');
+        STATE.cacheTs.memories = Date.now();
+        saveCache();
+    } catch (e) { showToast('Eroare la incarcarea memoriilor: ' + e.message, 'error'); }
+    STATE.loading.memories = false;
+}
+
+async function fetchActionItems() {
+    STATE.loading.actionItems = true;
+    try {
+        STATE.actionItems = await apiRequest('/action-items');
+        STATE.cacheTs.actionItems = Date.now();
+        saveCache();
+    } catch (e) { showToast('Eroare la incarcarea actiunilor: ' + e.message, 'error'); }
+    STATE.loading.actionItems = false;
+}
+
+async function fetchGoals() {
+    try {
+        STATE.goals = await apiRequest('/goals');
+        STATE.cacheTs.goals = Date.now();
+        saveCache();
+    } catch (e) { /* goals might not exist */ }
+}
+
+async function refreshAllData() {
+    showToast('Se reincarca datele...', 'info');
+    await Promise.all([fetchConversations(), fetchMemories(), fetchActionItems(), fetchGoals()]);
+    STATE.lastSync = Date.now();
+    updateSyncTime();
+    showToast('Datele au fost reincarcate', 'success');
+    render();
+}
+
+function isCacheValid(key) { return Date.now() - STATE.cacheTs[key] < CACHE_TTL; }
+
+// ==================== LOCALSTORAGE ====================
+function saveCache() {
+    try {
+        localStorage.setItem('omi_conversations', JSON.stringify(STATE.conversations));
+        localStorage.setItem('omi_memories', JSON.stringify(STATE.memories));
+        localStorage.setItem('omi_actions', JSON.stringify(STATE.actionItems));
+        localStorage.setItem('omi_goals', JSON.stringify(STATE.goals));
+        localStorage.setItem('omi_cache_ts', JSON.stringify(STATE.cacheTs));
+        localStorage.setItem('omi_last_sync', STATE.lastSync);
+    } catch (e) { /* storage full */ }
+}
+
+function loadCache() {
+    try {
+        var c = localStorage.getItem('omi_conversations');
+        if (c) STATE.conversations = JSON.parse(c);
+        var m = localStorage.getItem('omi_memories');
+        if (m) STATE.memories = JSON.parse(m);
+        var a = localStorage.getItem('omi_actions');
+        if (a) STATE.actionItems = JSON.parse(a);
+        var g = localStorage.getItem('omi_goals');
+        if (g) STATE.goals = JSON.parse(g);
+        var ts = localStorage.getItem('omi_cache_ts');
+        if (ts) STATE.cacheTs = JSON.parse(ts);
+        STATE.lastSync = parseInt(localStorage.getItem('omi_last_sync')) || null;
+    } catch (e) { /* corrupt cache */ }
+}
+
+function clearAllCache() {
+    ['omi_conversations', 'omi_memories', 'omi_actions', 'omi_goals', 'omi_cache_ts', 'omi_last_sync'].forEach(function(k) { localStorage.removeItem(k); });
+    STATE.conversations = []; STATE.memories = []; STATE.actionItems = []; STATE.goals = [];
+    STATE.cacheTs = { conversations: 0, memories: 0, actionItems: 0, goals: 0 };
+    STATE.lastSync = null;
+}
+
+// ==================== AUTH ====================
+async function login() {
+    var key = document.getElementById('authKeyInput').value.trim();
+    if (!key) { document.getElementById('authError').style.display = 'block'; document.getElementById('authError').textContent = 'Introdu cheia API'; return; }
+    document.getElementById('authError').style.display = 'none';
+    try {
+        var testUrl = IS_LOCAL
+            ? '/api/v1/dev/user/conversations?limit=1'
+            : '/api/proxy?path=' + encodeURIComponent('/v1/dev/user/conversations?limit=1');
+        var resp = await fetch(testUrl, { headers: { 'Authorization': 'Bearer ' + key } });
+        if (!resp.ok) throw new Error('Invalid key');
+        STATE.apiKey = key;
+        localStorage.setItem('omi_api_key', key);
+        showScreen('screenApp');
+        buildMenu();
+        await refreshAllData();
+    } catch (e) {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authError').textContent = 'Cheia API este invalida sau conexiunea a esuat';
+    }
+}
+
+function logout() {
+    if (!confirm('Sigur vrei sa te deconectezi?')) return;
+    localStorage.removeItem('omi_api_key');
+    clearAllCache();
+    STATE.apiKey = null;
+    STATE.currentPage = 'dashboard';
+    showScreen('screenAuth');
+}
+
+// ==================== NAVIGATION ====================
+function navigate(page) {
+    if (page !== 'conversationDetail') STATE.selectedConversation = null;
+    STATE.currentPage = page;
+    buildMenu();
+    render();
+    document.getElementById('contentArea').scrollTop = 0;
+}
+
+function updateSyncTime() {
+    var el = document.getElementById('syncTime');
+    if (el && STATE.lastSync) el.textContent = 'Sync: ' + formatRelative(new Date(STATE.lastSync).toISOString());
+}
+
+// ==================== SIDEBAR ====================
+function toggleSidebar() {
+    STATE.sidebarCollapsed = !STATE.sidebarCollapsed;
+    document.getElementById('sidebarEl').classList.toggle('collapsed');
+}
+
+function buildMenu() {
+    var items = [
+        { id: 'dashboard', label: 'Dashboard', icon: IC.home },
+        { id: 'conversations', label: 'Conversatii', icon: IC.messageSquare, badge: STATE.conversations.length || '' },
+        { id: 'memories', label: 'Memorii', icon: IC.brain, badge: STATE.memories.length || '' },
+        { id: 'actions', label: 'Actiuni', icon: IC.checkSquare, badge: STATE.actionItems.filter(function(a){return !a.completed;}).length || '' },
+        { id: 'statistics', label: 'Statistici', icon: IC.barChart },
+        { id: 'settings', label: 'Setari', icon: IC.settings },
+    ];
+    var html = '';
+    items.forEach(function(item) {
+        var active = STATE.currentPage === item.id || (STATE.currentPage === 'conversationDetail' && item.id === 'conversations');
+        html += '<div class="sb-item' + (active ? ' active' : '') + '" onclick="navigate(\'' + item.id + '\')">';
+        html += item.icon;
+        html += '<span class="sb-item-label">' + item.label + '</span>';
+        if (item.badge) html += '<span class="sb-badge">' + item.badge + '</span>';
+        html += '</div>';
+    });
+    document.getElementById('navMenu').innerHTML = html;
+}
+
+// ==================== MAIN RENDER ====================
+function render() {
+    var content = document.getElementById('contentArea');
+    var titles = {
+        dashboard: 'Dashboard', conversations: 'Conversatii', conversationDetail: 'Detalii Conversatie',
+        memories: 'Memorii', actions: 'Actiuni', statistics: 'Statistici', settings: 'Setari'
+    };
+    document.getElementById('pageTitle').textContent = titles[STATE.currentPage] || '';
+    updateSyncTime();
+
+    switch (STATE.currentPage) {
+        case 'dashboard': content.innerHTML = renderDashboard(); break;
+        case 'conversations': content.innerHTML = renderConversations(); break;
+        case 'conversationDetail': content.innerHTML = renderConversationDetail(); break;
+        case 'memories': content.innerHTML = renderMemories(); break;
+        case 'actions': content.innerHTML = renderActions(); break;
+        case 'statistics': content.innerHTML = renderStatistics(); break;
+        case 'settings': content.innerHTML = renderSettings(); break;
+        default: content.innerHTML = renderDashboard();
+    }
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+    var convCount = STATE.conversations.length;
+    var memCount = STATE.memories.length;
+    var pendingActions = STATE.actionItems.filter(function(a) { return !a.completed; }).length;
+    var cats = {};
+    STATE.conversations.forEach(function(c) { var cat = c.structured && c.structured.category || 'other'; cats[cat] = (cats[cat] || 0) + 1; });
+    var catCount = Object.keys(cats).length;
+
+    var html = '<div class="stats-grid">';
+    html += statCard(IC.messageSquare, 'orange', convCount, 'Conversatii');
+    html += statCard(IC.brain, 'blue', memCount, 'Memorii');
+    html += statCard(IC.checkSquare, 'green', pendingActions, 'Actiuni in asteptare');
+    html += statCard(IC.tag, 'purple', catCount, 'Categorii');
+    html += '</div>';
+
+    // Recent conversations
+    html += '<div class="section-header"><h3>Conversatii recente</h3><a href="#" onclick="navigate(\'conversations\');return false;">Vezi toate ' + IC.chevronRight + '</a></div>';
+    var recent = STATE.conversations.slice(0, 6);
+    if (recent.length) {
+        html += '<div class="cards-grid" style="margin-bottom:24px">';
+        recent.forEach(function(c) { html += renderConvCard(c); });
+        html += '</div>';
+    } else {
+        html += '<div class="empty-state">' + IC.messageSquare + '<h4>Nicio conversatie</h4><p>Datele vor aparea dupa sincronizare</p></div>';
+    }
+
+    // Top categories
+    html += '<div class="section-header"><h3>Top categorii</h3></div>';
+    var sortedCats = Object.entries(cats).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 8);
+    if (sortedCats.length) {
+        var maxVal = sortedCats[0][1];
+        html += '<div class="detail-section"><div class="bar-chart">';
+        sortedCats.forEach(function(entry) {
+            var pct = Math.round(entry[1] / maxVal * 100);
+            html += '<div class="bar-row"><div class="bar-label">' + esc(entry[0]) + '</div>';
+            html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,' + getCatColor(entry[0]) + ',' + getCatColor(entry[0]) + '88)">' + entry[1] + '</div></div>';
+            html += '</div>';
+        });
+        html += '</div></div>';
+    }
+
+    // Pending action items
+    if (STATE.actionItems.length) {
+        html += '<div class="section-header" style="margin-top:24px"><h3>Actiuni in asteptare</h3><a href="#" onclick="navigate(\'actions\');return false;">Vezi toate ' + IC.chevronRight + '</a></div>';
+        html += '<div class="list-grid">';
+        STATE.actionItems.filter(function(a) { return !a.completed; }).slice(0, 5).forEach(function(a) {
+            html += renderActionItem(a);
+        });
+        html += '</div>';
+    }
+
+    return html;
+}
+
+function statCard(icon, color, value, label) {
+    return '<div class="stat-card"><div class="stat-icon ' + color + '">' + icon + '</div><div class="stat-info"><div class="stat-value">' + value + '</div><div class="stat-label">' + label + '</div></div></div>';
+}
+
+// ==================== CONVERSATIONS ====================
+function renderConvCard(c) {
+    var s = c.structured || {};
+    var cat = s.category || 'other';
+    var html = '<div class="card" onclick="openConversation(\'' + c.id + '\')">';
+    html += '<div class="card-title">' + esc(s.title || 'Fara titlu') + '</div>';
+    html += '<div class="card-overview">' + esc(truncate(s.overview || '', 140)) + '</div>';
+    html += '<div class="card-meta">';
+    html += '<span class="badge badge-' + cat + '">' + esc(cat) + '</span>';
+    html += '<span class="card-meta-item">' + IC.calendar + ' ' + formatRelative(c.created_at) + '</span>';
+    if (c.finished_at && c.started_at) html += '<span class="card-meta-item">' + IC.clock + ' ' + formatDuration(c.started_at, c.finished_at) + '</span>';
+    if (c.geolocation && c.geolocation.address) html += '<span class="card-meta-item">' + IC.mapPin + ' ' + esc(truncate(c.geolocation.address, 30)) + '</span>';
+    html += '</div></div>';
+    return html;
+}
+
+function renderConversations() {
+    var html = '<div class="search-bar">' + IC.search + '<input type="text" placeholder="Cauta conversatii..." value="' + esc(STATE.convSearch) + '" oninput="STATE.convSearch=this.value;debouncedRender()"></div>';
+
+    // Category filter
+    var cats = {};
+    STATE.conversations.forEach(function(c) { var cat = (c.structured && c.structured.category) || 'other'; cats[cat] = (cats[cat] || 0) + 1; });
+    html += '<div class="filter-row">';
+    html += '<button class="filter-btn' + (STATE.convCategory === 'all' ? ' active' : '') + '" onclick="STATE.convCategory=\'all\';render()">Toate</button>';
+    Object.keys(cats).sort().forEach(function(cat) {
+        html += '<button class="filter-btn' + (STATE.convCategory === cat ? ' active' : '') + '" onclick="STATE.convCategory=\'' + cat + '\';render()">' + cat + ' (' + cats[cat] + ')</button>';
+    });
+    html += '</div>';
+
+    // Filter
+    var filtered = STATE.conversations.filter(function(c) {
+        var s = c.structured || {};
+        var cat = s.category || 'other';
+        if (STATE.convCategory !== 'all' && cat !== STATE.convCategory) return false;
+        if (STATE.convSearch) {
+            var q = STATE.convSearch.toLowerCase();
+            return (s.title || '').toLowerCase().indexOf(q) !== -1 || (s.overview || '').toLowerCase().indexOf(q) !== -1;
+        }
+        return true;
+    });
+
+    html += '<div class="results-count">' + filtered.length + ' conversatii</div>';
+    html += '<div class="list-grid">';
+    filtered.forEach(function(c) { html += renderConvCard(c); });
+    html += '</div>';
+    if (!filtered.length) html += '<div class="empty-state">' + IC.messageSquare + '<h4>Nicio conversatie gasita</h4><p>Incearca alt filtru sau cuvant cheie</p></div>';
+    return html;
+}
+
+var debouncedRender = debounce(render, 300);
+
+function openConversation(id) {
+    STATE.selectedConversation = STATE.conversations.find(function(c) { return c.id === id; });
+    STATE.currentPage = 'conversationDetail';
+    buildMenu();
+    render();
+    document.getElementById('contentArea').scrollTop = 0;
+}
+
+function renderConversationDetail() {
+    var c = STATE.selectedConversation;
+    if (!c) return '<div class="empty-state">Conversatia nu a fost gasita</div>';
+    var s = c.structured || {};
+    var cat = s.category || 'other';
+
+    var html = '<div class="detail-back" onclick="navigate(\'conversations\')">' + IC.arrowLeft + ' Inapoi la conversatii</div>';
+    html += '<div class="detail-header"><h2>' + esc(s.title || 'Fara titlu') + '</h2>';
+    html += '<div class="card-meta">';
+    html += '<span class="badge badge-' + cat + '">' + esc(cat) + '</span>';
+    html += '<span class="card-meta-item">' + IC.calendar + ' ' + formatDate(c.created_at) + '</span>';
+    if (c.finished_at && c.started_at) html += '<span class="card-meta-item">' + IC.clock + ' ' + formatDuration(c.started_at, c.finished_at) + '</span>';
+    if (c.language) html += '<span class="card-meta-item">' + IC.globe + ' ' + esc(c.language) + '</span>';
+    html += '</div></div>';
+
+    // Overview
+    html += '<div class="detail-section"><h4>' + IC.info + ' Rezumat</h4><div class="detail-overview">' + esc(s.overview || 'Fara rezumat') + '</div></div>';
+
+    // Geolocation
+    if (c.geolocation && c.geolocation.address) {
+        html += '<div class="detail-section"><h4>' + IC.mapPin + ' Locatie</h4>';
+        html += '<div style="color:var(--text)">' + esc(c.geolocation.address) + '</div>';
+        if (c.geolocation.latitude) {
+            html += '<a href="https://www.google.com/maps?q=' + c.geolocation.latitude + ',' + c.geolocation.longitude + '" target="_blank" rel="noopener" style="font-size:0.8rem;display:inline-flex;align-items:center;gap:4px;margin-top:8px">' + IC.externalLink + ' Deschide in Google Maps</a>';
+        }
+        html += '</div>';
+    }
+
+    // Action items from structured
+    if (s.action_items && s.action_items.length) {
+        html += '<div class="detail-section"><h4>' + IC.checkSquare + ' Actiuni</h4>';
+        s.action_items.forEach(function(a) {
+            html += '<div style="padding:6px 0;font-size:0.9rem;color:var(--text)">' + esc(typeof a === 'string' ? a : a.description || JSON.stringify(a)) + '</div>';
+        });
+        html += '</div>';
+    }
+
+    // Transcript
+    if (c.transcript_segments && c.transcript_segments.length) {
+        html += '<div class="detail-section"><h4>' + IC.mic + ' Transcriere</h4><div class="detail-transcript">';
+        c.transcript_segments.forEach(function(seg) {
+            html += '<div class="transcript-segment">';
+            if (seg.speaker) html += '<span class="transcript-speaker">Speaker ' + seg.speaker + '</span>';
+            if (seg.start) html += '<span class="transcript-time">' + Math.round(seg.start) + 's</span>';
+            html += '<div>' + esc(seg.text) + '</div></div>';
+        });
+        html += '</div></div>';
+    }
+
+    return html;
+}
+
+// ==================== MEMORIES ====================
+function renderMemories() {
+    var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+    html += '<div class="filter-row" style="margin-bottom:0">';
+    html += '<button class="filter-btn' + (STATE.memCategory === 'all' ? ' active' : '') + '" onclick="STATE.memCategory=\'all\';render()">Toate (' + STATE.memories.length + ')</button>';
+    var sysCnt = STATE.memories.filter(function(m){return m.category==='system';}).length;
+    var intCnt = STATE.memories.filter(function(m){return m.category==='interesting';}).length;
+    html += '<button class="filter-btn' + (STATE.memCategory === 'system' ? ' active' : '') + '" onclick="STATE.memCategory=\'system\';render()">Sistem (' + sysCnt + ')</button>';
+    html += '<button class="filter-btn' + (STATE.memCategory === 'interesting' ? ' active' : '') + '" onclick="STATE.memCategory=\'interesting\';render()">Interesante (' + intCnt + ')</button>';
+    html += '</div>';
+    html += '<button class="btn btn-secondary btn-sm" onclick="openMemoryModal()">' + IC.plus + ' Adauga</button>';
+    html += '</div>';
+
+    html += '<div class="search-bar">' + IC.search + '<input type="text" placeholder="Cauta in memorii..." value="' + esc(STATE.memSearch) + '" oninput="STATE.memSearch=this.value;debouncedRender()"></div>';
+
+    var filtered = STATE.memories.filter(function(m) {
+        if (STATE.memCategory !== 'all' && m.category !== STATE.memCategory) return false;
+        if (STATE.memSearch) return (m.content || '').toLowerCase().indexOf(STATE.memSearch.toLowerCase()) !== -1;
+        return true;
+    });
+
+    html += '<div class="results-count">' + filtered.length + ' memorii</div>';
+    html += '<div class="cards-grid">';
+    filtered.forEach(function(m) {
+        html += '<div class="memory-card">';
+        html += '<div class="memory-content">' + esc(truncate(m.content || '', 300)) + '</div>';
+        html += '<div class="memory-footer"><div class="memory-footer-left">';
+        html += '<span class="badge badge-' + (m.category || 'other') + '">' + esc(m.category || 'other') + '</span>';
+        html += '<span style="font-size:0.7rem;color:var(--text-muted)">' + formatRelative(m.created_at) + '</span>';
+        html += '</div><div class="memory-footer-right">';
+        html += '<button class="btn-icon" title="Editeaza" onclick="openMemoryModal(\'' + m.id + '\')">' + IC.edit + '</button>';
+        html += '<button class="btn-icon" title="Sterge" onclick="deleteMemory(\'' + m.id + '\')" style="color:var(--danger)">' + IC.trash + '</button>';
+        html += '</div></div></div>';
+    });
+    html += '</div>';
+    if (!filtered.length) html += '<div class="empty-state">' + IC.brain + '<h4>Nicio memorie gasita</h4></div>';
+    return html;
+}
+
+function openMemoryModal(id) {
+    var mem = id ? STATE.memories.find(function(m) { return m.id === id; }) : null;
+    var isEdit = !!mem;
+    var html = '<div class="modal-header"><h3>' + (isEdit ? 'Editeaza Memorie' : 'Adauga Memorie') + '</h3><button class="btn-icon" onclick="closeModal()">' + IC.x + '</button></div>';
+    html += '<div class="modal-body">';
+    html += '<div class="form-group"><label class="form-label">Continut</label><textarea class="form-textarea" id="memContent" rows="6">' + esc(mem ? mem.content : '') + '</textarea></div>';
+    html += '<div class="form-group"><label class="form-label">Categorie</label><select class="form-select" id="memCat"><option value="system"' + (mem && mem.category === 'system' ? ' selected' : '') + '>Sistem</option><option value="interesting"' + (!mem || mem.category === 'interesting' ? ' selected' : '') + '>Interesant</option></select></div>';
+    html += '</div>';
+    html += '<div class="modal-footer">';
+    html += '<button class="btn btn-secondary" onclick="closeModal()">Anuleaza</button>';
+    html += '<button class="btn btn-primary" style="width:auto" onclick="saveMemory(' + (isEdit ? "'" + id + "'" : 'null') + ')">' + (isEdit ? 'Salveaza' : 'Adauga') + '</button>';
+    html += '</div>';
+    document.getElementById('modalBox').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+async function saveMemory(id) {
+    var content = document.getElementById('memContent').value.trim();
+    var category = document.getElementById('memCat').value;
+    if (!content) { showToast('Continutul este obligatoriu', 'error'); return; }
+    try {
+        if (id) {
+            await apiRequest('/memories/' + id, 'PATCH', { content: content });
+            showToast('Memorie actualizata', 'success');
+        } else {
+            await apiRequest('/memories', 'POST', { content: content, category: category });
+            showToast('Memorie adaugata', 'success');
+        }
+        closeModal();
+        await fetchMemories();
+        render();
+    } catch (e) { showToast('Eroare: ' + e.message, 'error'); }
+}
+
+async function deleteMemory(id) {
+    if (!confirm('Sigur vrei sa stergi aceasta memorie?')) return;
+    try {
+        await apiRequest('/memories/' + id, 'DELETE');
+        showToast('Memorie stearsa', 'success');
+        await fetchMemories();
+        render();
+    } catch (e) { showToast('Eroare: ' + e.message, 'error'); }
+}
+
+// ==================== ACTIONS ====================
+function renderActions() {
+    var pending = STATE.actionItems.filter(function(a) { return !a.completed; });
+    var completed = STATE.actionItems.filter(function(a) { return a.completed; });
+    var overdue = pending.filter(function(a) { return a.due_at && new Date(a.due_at) < new Date(); });
+
+    var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+    html += '<div class="filter-row" style="margin-bottom:0">';
+    html += '<button class="filter-btn' + (STATE.actionFilter === 'all' ? ' active' : '') + '" onclick="STATE.actionFilter=\'all\';render()">Toate (' + STATE.actionItems.length + ')</button>';
+    html += '<button class="filter-btn' + (STATE.actionFilter === 'pending' ? ' active' : '') + '" onclick="STATE.actionFilter=\'pending\';render()">In asteptare (' + pending.length + ')</button>';
+    html += '<button class="filter-btn' + (STATE.actionFilter === 'completed' ? ' active' : '') + '" onclick="STATE.actionFilter=\'completed\';render()">Finalizate (' + completed.length + ')</button>';
+    html += '<button class="filter-btn' + (STATE.actionFilter === 'overdue' ? ' active' : '') + '" onclick="STATE.actionFilter=\'overdue\';render()">Intarziate (' + overdue.length + ')</button>';
+    html += '</div>';
+    html += '<button class="btn btn-secondary btn-sm" onclick="openActionModal()">' + IC.plus + ' Adauga</button>';
+    html += '</div>';
+
+    var filtered = STATE.actionItems;
+    if (STATE.actionFilter === 'pending') filtered = pending;
+    else if (STATE.actionFilter === 'completed') filtered = completed;
+    else if (STATE.actionFilter === 'overdue') filtered = overdue;
+
+    // Sort: pending first, then by due date
+    filtered = filtered.slice().sort(function(a, b) {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        if (a.due_at && b.due_at) return new Date(a.due_at) - new Date(b.due_at);
+        return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    html += '<div class="list-grid">';
+    filtered.forEach(function(a) { html += renderActionItem(a); });
+    html += '</div>';
+    if (!filtered.length) html += '<div class="empty-state">' + IC.checkSquare + '<h4>Nicio actiune</h4></div>';
+    return html;
+}
+
+function renderActionItem(a) {
+    var isOverdue = !a.completed && a.due_at && new Date(a.due_at) < new Date();
+    var isToday = !a.completed && a.due_at && new Date(a.due_at).toDateString() === new Date().toDateString();
+    var dueClass = isOverdue ? 'overdue' : (isToday ? 'today' : 'future');
+
+    var html = '<div class="action-item">';
+    html += '<div class="action-check' + (a.completed ? ' checked' : '') + '" onclick="toggleAction(\'' + a.id + '\',' + !a.completed + ')">';
+    if (a.completed) html += IC.check;
+    html += '</div>';
+    html += '<div class="action-body">';
+    html += '<div class="action-desc' + (a.completed ? ' completed' : '') + '">' + esc(a.description) + '</div>';
+    html += '<div class="action-meta">';
+    if (a.due_at) html += '<span class="action-due ' + dueClass + '">' + IC.calendar + ' ' + formatDate(a.due_at) + (isOverdue ? ' (intarziat)' : '') + '</span>';
+    html += '<span>' + IC.clock + ' ' + formatRelative(a.created_at) + '</span>';
+    html += '</div></div>';
+    html += '<div class="action-actions">';
+    html += '<button class="btn-icon" onclick="deleteAction(\'' + a.id + '\')" style="color:var(--danger)" title="Sterge">' + IC.trash + '</button>';
+    html += '</div></div>';
+    return html;
+}
+
+async function toggleAction(id, completed) {
+    try {
+        await apiRequest('/action-items/' + id, 'PATCH', { completed: completed });
+        var item = STATE.actionItems.find(function(a) { return a.id === id; });
+        if (item) item.completed = completed;
+        saveCache();
+        render();
+        showToast(completed ? 'Actiune finalizata' : 'Actiune reactivata', 'success');
+    } catch (e) { showToast('Eroare: ' + e.message, 'error'); }
+}
+
+function openActionModal() {
+    var html = '<div class="modal-header"><h3>Adauga Actiune</h3><button class="btn-icon" onclick="closeModal()">' + IC.x + '</button></div>';
+    html += '<div class="modal-body">';
+    html += '<div class="form-group"><label class="form-label">Descriere</label><input class="form-input" id="actionDesc" placeholder="Ce trebuie facut?"></div>';
+    html += '<div class="form-group"><label class="form-label">Termen limita (optional)</label><input class="form-input" id="actionDue" type="datetime-local"></div>';
+    html += '</div>';
+    html += '<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Anuleaza</button>';
+    html += '<button class="btn btn-primary" style="width:auto" onclick="saveAction()">Adauga</button></div>';
+    document.getElementById('modalBox').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+async function saveAction() {
+    var desc = document.getElementById('actionDesc').value.trim();
+    if (!desc) { showToast('Descrierea este obligatorie', 'error'); return; }
+    var due = document.getElementById('actionDue').value;
+    var body = { description: desc };
+    if (due) body.due_at = new Date(due).toISOString();
+    try {
+        await apiRequest('/action-items', 'POST', body);
+        showToast('Actiune adaugata', 'success');
+        closeModal();
+        await fetchActionItems();
+        render();
+    } catch (e) { showToast('Eroare: ' + e.message, 'error'); }
+}
+
+async function deleteAction(id) {
+    if (!confirm('Sigur vrei sa stergi aceasta actiune?')) return;
+    try {
+        await apiRequest('/action-items/' + id, 'DELETE');
+        showToast('Actiune stearsa', 'success');
+        await fetchActionItems();
+        render();
+    } catch (e) { showToast('Eroare: ' + e.message, 'error'); }
+}
+
+// ==================== STATISTICS ====================
+function renderStatistics() {
+    if (!STATE.conversations.length) return '<div class="empty-state">' + IC.barChart + '<h4>Date insuficiente</h4><p>Sincronizeaza datele pentru a vedea statisticile</p></div>';
+
+    var html = '';
+
+    // 1. Category breakdown
+    var cats = {};
+    STATE.conversations.forEach(function(c) { var cat = (c.structured && c.structured.category) || 'other'; cats[cat] = (cats[cat] || 0) + 1; });
+    var sortedCats = Object.entries(cats).sort(function(a, b) { return b[1] - a[1]; });
+    var maxCat = sortedCats[0] ? sortedCats[0][1] : 1;
+
+    html += '<div class="detail-section"><h4>' + IC.tag + ' Distributie pe categorii</h4>';
+    html += '<div class="bar-chart">';
+    sortedCats.forEach(function(e) {
+        var pct = Math.round(e[1] / maxCat * 100);
+        html += '<div class="bar-row"><div class="bar-label">' + esc(e[0]) + '</div>';
+        html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:linear-gradient(90deg,' + getCatColor(e[0]) + ',' + getCatColor(e[0]) + '88)">' + e[1] + '</div></div>';
+        html += '</div>';
+    });
+    html += '</div></div>';
+
+    // 2. Conversations last 30 days
+    var days = {};
+    var now = Date.now();
+    for (var i = 29; i >= 0; i--) {
+        var d = new Date(now - i * 86400000);
+        days[d.toISOString().slice(0, 10)] = 0;
+    }
+    STATE.conversations.forEach(function(c) {
+        var key = (c.created_at || '').slice(0, 10);
+        if (days[key] !== undefined) days[key]++;
+    });
+    var dayEntries = Object.entries(days);
+    var maxDay = Math.max.apply(null, dayEntries.map(function(e) { return e[1]; })) || 1;
+
+    html += '<div class="detail-section"><h4>' + IC.calendar + ' Conversatii - ultimele 30 zile</h4>';
+    html += '<div style="display:flex;align-items:flex-end;gap:3px;height:120px;padding:0 4px">';
+    dayEntries.forEach(function(e) {
+        var pct = Math.round(e[1] / maxDay * 100);
+        var label = e[0].slice(8);
+        html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">';
+        html += '<div style="font-size:0.6rem;color:var(--text-muted)">' + (e[1] || '') + '</div>';
+        html += '<div style="width:100%;background:' + (e[1] ? 'var(--omi-accent)' : 'rgba(255,255,255,0.03)') + ';height:' + Math.max(pct, 2) + '%;border-radius:2px 2px 0 0;transition:height 0.6s"></div>';
+        html += '</div>';
+    });
+    html += '</div>';
+    html += '<div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.65rem;color:var(--text-muted)">';
+    html += '<span>' + dayEntries[0][0].slice(5) + '</span><span>' + dayEntries[dayEntries.length - 1][0].slice(5) + '</span></div>';
+    html += '</div>';
+
+    // 3. Hourly distribution
+    var hours = new Array(24).fill(0);
+    STATE.conversations.forEach(function(c) {
+        if (c.created_at) hours[new Date(c.created_at).getHours()]++;
+    });
+    var maxHour = Math.max.apply(null, hours) || 1;
+
+    html += '<div class="detail-section"><h4>' + IC.clock + ' Distributie pe ore</h4>';
+    html += '<div class="heatmap-grid">';
+    hours.forEach(function(count, h) {
+        var level = count === 0 ? 0 : Math.min(5, Math.ceil(count / maxHour * 5));
+        html += '<div class="heatmap-cell heat-' + level + '" title="' + h + ':00 - ' + count + ' conv." data-label="' + (h % 4 === 0 ? h + 'h' : '') + '"></div>';
+    });
+    html += '</div></div>';
+
+    // 4. Weekday distribution
+    var weekdays = [0, 0, 0, 0, 0, 0, 0];
+    var dayNames = ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sam'];
+    STATE.conversations.forEach(function(c) {
+        if (c.created_at) weekdays[new Date(c.created_at).getDay()]++;
+    });
+    var maxWd = Math.max.apply(null, weekdays) || 1;
+
+    html += '<div class="detail-section"><h4>' + IC.calendar + ' Distributie pe zile</h4>';
+    html += '<div class="weekday-chart">';
+    weekdays.forEach(function(count, i) {
+        var pct = Math.round(count / maxWd * 100);
+        html += '<div class="weekday-bar"><div class="weekday-value">' + count + '</div>';
+        html += '<div class="weekday-fill" style="height:' + Math.max(pct, 2) + '%"></div>';
+        html += '<div class="weekday-label">' + dayNames[i] + '</div></div>';
+    });
+    html += '</div></div>';
+
+    // 5. Top locations
+    var locs = {};
+    STATE.conversations.forEach(function(c) {
+        if (c.geolocation && c.geolocation.address) {
+            var addr = c.geolocation.address;
+            locs[addr] = (locs[addr] || 0) + 1;
+        }
+    });
+    var sortedLocs = Object.entries(locs).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 8);
+    if (sortedLocs.length) {
+        var maxLoc = sortedLocs[0][1];
+        html += '<div class="detail-section"><h4>' + IC.mapPin + ' Locatii frecvente</h4>';
+        html += '<div class="bar-chart">';
+        sortedLocs.forEach(function(e) {
+            var pct = Math.round(e[1] / maxLoc * 100);
+            html += '<div class="bar-row"><div class="bar-label" title="' + esc(e[0]) + '">' + esc(truncate(e[0], 25)) + '</div>';
+            html += '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%">' + e[1] + '</div></div></div>';
+        });
+        html += '</div></div>';
+    }
+
+    // 6. Summary stats
+    var totalDuration = 0, durationCount = 0;
+    STATE.conversations.forEach(function(c) {
+        if (c.started_at && c.finished_at) {
+            totalDuration += new Date(c.finished_at) - new Date(c.started_at);
+            durationCount++;
+        }
+    });
+    var avgDuration = durationCount ? Math.round(totalDuration / durationCount / 60000) : 0;
+    var langs = {};
+    STATE.conversations.forEach(function(c) { if (c.language) langs[c.language] = (langs[c.language] || 0) + 1; });
+
+    html += '<div class="detail-section"><h4>' + IC.zap + ' Sumar</h4>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px">';
+    html += '<div><div style="font-size:1.4rem;font-weight:700">' + STATE.conversations.length + '</div><div style="font-size:0.8rem;color:var(--text-secondary)">Total conversatii</div></div>';
+    html += '<div><div style="font-size:1.4rem;font-weight:700">' + STATE.memories.length + '</div><div style="font-size:0.8rem;color:var(--text-secondary)">Total memorii</div></div>';
+    html += '<div><div style="font-size:1.4rem;font-weight:700">' + avgDuration + ' min</div><div style="font-size:0.8rem;color:var(--text-secondary)">Durata medie</div></div>';
+    html += '<div><div style="font-size:1.4rem;font-weight:700">' + Object.keys(langs).join(', ') + '</div><div style="font-size:0.8rem;color:var(--text-secondary)">Limbi</div></div>';
+    html += '</div></div>';
+
+    return html;
+}
+
+// ==================== SETTINGS ====================
+function renderSettings() {
+    var html = '<div class="settings-section"><h4>' + IC.key + ' Cheia API</h4>';
+    html += '<div class="settings-row"><span class="settings-row-label">Cheie curenta</span>';
+    html += '<span class="settings-row-value">' + (STATE.apiKey ? STATE.apiKey.substring(0, 12) + '...' + STATE.apiKey.slice(-6) : 'N/A') + '</span></div>';
+    html += '<div style="margin-top:12px"><button class="btn btn-secondary btn-sm" onclick="testConnection()">Testeaza conexiunea</button></div>';
+    html += '</div>';
+
+    html += '<div class="settings-section"><h4>' + IC.database + ' Cache & Date</h4>';
+    html += '<div class="settings-row"><span class="settings-row-label">Ultima sincronizare</span><span class="settings-row-value">' + (STATE.lastSync ? formatDate(new Date(STATE.lastSync).toISOString()) : 'Niciodata') + '</span></div>';
+    html += '<div class="settings-row"><span class="settings-row-label">Conversatii cache</span><span class="settings-row-value">' + STATE.conversations.length + '</span></div>';
+    html += '<div class="settings-row"><span class="settings-row-label">Memorii cache</span><span class="settings-row-value">' + STATE.memories.length + '</span></div>';
+    html += '<div class="settings-row"><span class="settings-row-label">Actiuni cache</span><span class="settings-row-value">' + STATE.actionItems.length + '</span></div>';
+    html += '<div style="display:flex;gap:8px;margin-top:12px">';
+    html += '<button class="btn btn-secondary btn-sm" onclick="refreshAllData()">' + IC.refresh + ' Reincarca date</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="if(confirm(\'Sigur vrei sa stergi cache-ul?\')){clearAllCache();render();showToast(\'Cache sters\',\'success\');}">Sterge cache</button>';
+    html += '</div></div>';
+
+    html += '<div class="settings-section"><h4>' + IC.download + ' Export</h4>';
+    html += '<p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px">Exporta toate datele din cache intr-un fisier JSON</p>';
+    html += '<button class="btn btn-secondary btn-sm" onclick="exportData()">' + IC.download + ' Exporta JSON</button>';
+    html += '</div>';
+
+    html += '<div class="settings-section"><h4>' + IC.info + ' Despre</h4>';
+    html += '<div class="settings-row"><span class="settings-row-label">Aplicatie</span><span class="settings-row-value">OMI Dashboard v1.0</span></div>';
+    html += '<div class="settings-row"><span class="settings-row-label">Ecosistem</span><span class="settings-row-value">CONTINUUM</span></div>';
+    html += '<div class="settings-row"><span class="settings-row-label">API</span><span class="settings-row-value">api.omi.me/v1/dev</span></div>';
+    html += '</div>';
+
+    html += '<div style="margin-top:24px"><button class="btn btn-danger" style="width:auto" onclick="logout()">' + IC.x + ' Deconectare</button></div>';
+    return html;
+}
+
+async function testConnection() {
+    try {
+        var data = await apiRequest('/conversations?limit=1');
+        showToast('Conexiune reusita! API-ul functioneaza.', 'success');
+    } catch (e) { showToast('Conexiune esuata: ' + e.message, 'error'); }
+}
+
+function exportData() {
+    var data = {
+        exportDate: new Date().toISOString(),
+        conversations: STATE.conversations,
+        memories: STATE.memories,
+        actionItems: STATE.actionItems,
+        goals: STATE.goals,
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'omi-export-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Export descarcat', 'success');
+}
+
+// ==================== MODAL ====================
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', function() {
+    var savedKey = localStorage.getItem('omi_api_key');
+    if (savedKey) {
+        STATE.apiKey = savedKey;
+        loadCache();
+        showScreen('screenApp');
+        buildMenu();
+        if (!isCacheValid('conversations')) {
+            refreshAllData();
+        } else {
+            render();
+        }
+    } else {
+        showScreen('screenAuth');
+    }
+});
+
+// Keyboard: Enter on auth input
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'authKeyInput') login();
+});
+</script>
+</body>
+</html>
